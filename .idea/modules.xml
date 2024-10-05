@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/HYU_CSE_Final.iml" filepath="$PROJECT_DIR$/.idea/HYU_CSE_Final.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TAACO/.idea/TAACO.iml" filepath="$PROJECT_DIR$/TAACO/.idea/TAACO.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TACCO/.idea/TACCO.iml" filepath="$PROJECT_DIR$/TACCO/.idea/TACCO.iml" />
+    </modules>
+  </component>
+</project>
