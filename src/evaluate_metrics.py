@@ -1,73 +1,110 @@
+# evaluate_metrics.py
+
 import sacrebleu
 from rouge_score import rouge_scorer
 from bert_score import score
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 from transformers import BertTokenizer, BertModel
 import torch
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
+from nltk.util import ngrams
+from collections import Counter
 
-# # spacy 모델 로드
-# nlp = spacy.load("en_core_web_sm")
 
 def calculate_bleu(references, hypotheses):
     bleu = sacrebleu.corpus_bleu(hypotheses, [references])
     return bleu.score
 
-# def calculate_rouge(references, hypotheses):
-#     scorer = rouge_scorer.RougeScorer(['rouge1', 'rougeL'], use_stemmer=True)
-#     scores = [scorer.score(ref, hyp) for ref, hyp in zip(references, hypotheses)]
-#     return scores
 
 def calculate_rouge(references, hypotheses):
     scorer = rouge_scorer.RougeScorer(['rouge1', 'rougeL'], use_stemmer=True)
     scores = [scorer.score(ref, hyp) for ref, hyp in zip(references, hypotheses)]
-    # 평균 ROUGE-L F1 점수 계산
     rouge_l_f1 = np.mean([score['rougeL'].fmeasure for score in scores])
     return rouge_l_f1
+
 
 def calculate_bert_score(references, hypotheses):
     P, R, F1 = score(hypotheses, references, lang="en", verbose=True)
     return F1.mean().item()
 
-def calculate_weighted_bleu(references, hypotheses):
-    """
-    텍스트 임베딩과 코사인 유사도를 활용한 가중 BLEU 점수 계산
-    """
-    # BERT 모델과 토크나이저 로드
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    model = BertModel.from_pretrained('bert-base-uncased')
-    model.eval()  # 평가 모드로 설정
 
-    # 모든 참조 및 가설 문장에 대해 임베딩 계산
-    reference_embeddings = []
-    hypothesis_embeddings = []
+# def calculate_weighted_bleu(references, hypotheses):
+#     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+#     model = BertModel.from_pretrained('bert-base-uncased')
+#     model.eval()
+#
+#     reference_embeddings = []
+#     hypothesis_embeddings = []
+#
+#     with torch.no_grad():
+#         for ref, hyp in zip(references, hypotheses):
+#             ref_tokens = tokenizer(ref, return_tensors='pt', truncation=True, padding=True)
+#             hyp_tokens = tokenizer(hyp, return_tensors='pt', truncation=True, padding=True)
+#             ref_embedding = model(**ref_tokens).last_hidden_state.mean(dim=1)
+#             hyp_embedding = model(**hyp_tokens).last_hidden_state.mean(dim=1)
+#             reference_embeddings.append(ref_embedding)
+#             hypothesis_embeddings.append(hyp_embedding)
+#
+#     similarities = []
+#     for ref_emb, hyp_emb in zip(reference_embeddings, hypothesis_embeddings):
+#         sim = cosine_similarity(ref_emb.numpy(), hyp_emb.numpy())[0][0]
+#         similarities.append(sim)
+#
+#     mean_similarity = np.mean(similarities)
+#     bleu = sacrebleu.corpus_bleu(hypotheses, [references]).score
+#     weighted_bleu = bleu * mean_similarity
+#
+#     return weighted_bleu
 
-    with torch.no_grad():
+
+def calculate_ngram_match(reference, candidate, n):
+    """
+    특정 N-그램 크기에서의 일치율을 계산하는 함수
+    """
+    ref_ngrams = list(ngrams(reference.split(), n))
+    cand_ngrams = list(ngrams(candidate.split(), n))
+    ref_counter = Counter(ref_ngrams)
+    cand_counter = Counter(cand_ngrams)
+    overlap = sum((cand_counter & ref_counter).values())
+    total = sum(ref_counter.values())
+    if total == 0:
+        return 0.0
+    return overlap / total
+
+
+def calculate_all_ngram_match(references, hypotheses, max_n=4):
+    """
+    1-그램부터 N-그램까지 모두 계산하여 평균 점수를 반환하는 함수
+    """
+    all_ngram_scores = []
+
+    for n in range(1, max_n + 1):
+        ngram_scores = []
         for ref, hyp in zip(references, hypotheses):
-            # 토크나이즈 및 텐서 변환
-            ref_tokens = tokenizer(ref, return_tensors='pt', truncation=True, padding=True)
-            hyp_tokens = tokenizer(hyp, return_tensors='pt', truncation=True, padding=True)
+            ngram_scores.append(calculate_ngram_match(ref, hyp, n=n))
+        all_ngram_scores.append(np.mean(ngram_scores))
 
-            # 임베딩 계산
-            ref_embedding = model(**ref_tokens).last_hidden_state.mean(dim=1)
-            hyp_embedding = model(**hyp_tokens).last_hidden_state.mean(dim=1)
+    # 1-그램, 2-그램, 3-그램, 4-그램의 평균 점수 반환
+    return np.mean(all_ngram_scores)
 
-            reference_embeddings.append(ref_embedding)
-            hypothesis_embeddings.append(hyp_embedding)
 
-    # 코사인 유사도 계산
-    similarities = []
-    for ref_emb, hyp_emb in zip(reference_embeddings, hypothesis_embeddings):
-        sim = cosine_similarity(ref_emb.numpy(), hyp_emb.numpy())[0][0]
-        similarities.append(sim)
+def calculate_combined_metric(references, hypotheses, ngram_weight=0.3, max_n=4):
+    """
+       1-그램부터 4-그램까지 모두 활용한 N-그램 일치율과 BERTScore를 결합하는 함수
+       """
+    # BERTScore 계산
+    P, R, F1 = score(hypotheses, references, lang="en", verbose=True)
+    bert_f1 = F1.mean().item()
 
-    # 평균 코사인 유사도 계산
-    mean_similarity = np.mean(similarities)
+    # 1-그램부터 max_n-그램까지의 평균 N-그램 일치율 계산
+    mean_ngram_score = calculate_all_ngram_match(references, hypotheses, max_n=max_n)
 
-    # 기존 BLEU 점수 계산
-    bleu = sacrebleu.corpus_bleu(hypotheses, [references]).score
+    # 문장의 길이에 따라 가중치 동적 조정
+    avg_sentence_length = np.mean([len(ref.split()) for ref in references])
+    if avg_sentence_length > 15:  # 문장이 길면 BERTScore에 더 높은 가중치 부여
+        dynamic_ngram_weight = max(ngram_weight - 0.1, 0.1)
+    else:  # 문장이 짧으면 N-그램에 더 높은 가중치 부여
+        dynamic_ngram_weight = min(ngram_weight + 0.1, 0.5)
 
-    # 가중치를 적용한 BLEU 점수 계산
-    weighted_bleu = bleu * mean_similarity
-
-    return weighted_bleu
+    combined_score = (1 - dynamic_ngram_weight) * bert_f1 + dynamic_ngram_weight * mean_ngram_score
+    return combined_score
