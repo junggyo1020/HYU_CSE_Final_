@@ -2,19 +2,20 @@
 
 import matplotlib.pyplot as plt
 
-def visualize_scores(bleu_scores, rouge_scores, bert_scores, weighted_bleu_scores, combined_scores):
+
+def visualize_scores(bleu_scores, rouge_scores, bert_scores, combined_scores):
     """
-    WMT, SQuAD, CNN 데이터셋에 대한 BLEU, ROUGE, BERTScore, Weighted BLEU, Combined Metric을 막대 차트로 시각화
+    WMT, SQuAD, CNN 데이터셋에 대한 BLEU, ROUGE, BERTScore, Combined Metric을 막대 차트로 시각화
     """
 
-    labels = ['WMT-BLEU', 'WMT-ROUGE-L', 'WMT-BERTScore', 'WMT-Weighted BLEU', 'WMT-Combined',
-              'SQuAD-BLEU', 'SQuAD-ROUGE-L', 'SQuAD-BERTScore', 'SQuAD-Weighted BLEU', 'SQuAD-Combined',
-              'CNN-BLEU', 'CNN-ROUGE-L', 'CNN-BERTScore', 'CNN-Weighted BLEU', 'CNN-Combined']
+    labels = ['WMT-BLEU', 'WMT-ROUGE-L', 'WMT-BERTScore', 'WMT-Combined',
+              'SQuAD-BLEU', 'SQuAD-ROUGE-L', 'SQuAD-BERTScore', 'SQuAD-Combined',
+              'CNN-BLEU', 'CNN-ROUGE-L', 'CNN-BERTScore', 'CNN-Combined']
 
-    scores = bleu_scores + rouge_scores + bert_scores + weighted_bleu_scores + combined_scores
+    scores = bleu_scores + rouge_scores + bert_scores + combined_scores
 
     plt.figure(figsize=(14, 6))
-    plt.bar(labels, scores, color=['blue', 'green', 'orange', 'purple', 'red'] * 3)
+    plt.bar(labels, scores, color=['blue', 'green', 'orange', 'purple'] * 3)
     plt.ylabel('Scores')
     plt.title('Comparison of Evaluation Metrics Across Datasets')
 
