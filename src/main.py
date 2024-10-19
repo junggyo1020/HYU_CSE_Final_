@@ -33,7 +33,6 @@ print("Calculating WMT scores...")
 wmt_bleu = calculate_bleu(wmt_references, wmt_hypotheses)
 wmt_rouge = calculate_rouge(wmt_references, wmt_hypotheses)
 wmt_bert = calculate_bert_score(wmt_references, wmt_hypotheses)
-# wmt_weighted_bleu = calculate_weighted_bleu(wmt_references, wmt_hypotheses)
 wmt_combined = calculate_combined_metric(wmt_references, wmt_hypotheses)
 
 # SQuAD 점수 계산
@@ -41,7 +40,6 @@ print("Calculating SQuAD scores...")
 squad_bleu = calculate_bleu(squad_references, squad_hypotheses)
 squad_rouge = calculate_rouge(squad_references, squad_hypotheses)
 squad_bert = calculate_bert_score(squad_references, squad_hypotheses)
-# squad_weighted_bleu = calculate_weighted_bleu(squad_references, squad_hypotheses)
 squad_combined = calculate_combined_metric(squad_references, squad_hypotheses)
 
 # CNN 점수 계산
@@ -49,14 +47,12 @@ print("Calculating CNN/DailyMail scores...")
 cnn_bleu = calculate_bleu(cnn_references, cnn_hypotheses)
 cnn_rouge = calculate_rouge(cnn_references, cnn_hypotheses)
 cnn_bert = calculate_bert_score(cnn_references, cnn_hypotheses)
-# cnn_weighted_bleu = calculate_weighted_bleu(cnn_references, cnn_hypotheses)
 cnn_combined = calculate_combined_metric(cnn_references, cnn_hypotheses)
 
 # 각 데이터셋의 점수 리스트
 bleu_scores = [wmt_bleu, squad_bleu, cnn_bleu]
 rouge_scores = [wmt_rouge, squad_rouge, cnn_rouge]
 bert_scores = [wmt_bert, squad_bert, cnn_bert]
-# weighted_bleu_scores = [wmt_weighted_bleu, squad_weighted_bleu, cnn_weighted_bleu]
 combined_scores = [wmt_combined, squad_combined, cnn_combined]
 
 # 점수 시각화
