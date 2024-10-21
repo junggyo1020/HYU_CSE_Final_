@@ -11,7 +11,7 @@ wmt_dataset = load_wmt_dataset()
 wmt_english_data = [item['en'] for item in wmt_dataset]
 wmt_references = translate_wmt_english_to_german(wmt_english_data) # 영어 문장을 독일어로 번역
 wmt_hypotheses = [item['de'] for item in wmt_dataset] # 독일어 문장
-save_to_txt(wmt_dataset, "wmt")  # WMT 데이터셋 텍스트 파일로 저장
+save_to_txt((wmt_references, wmt_hypotheses), "wmt")  # WMT 데이터셋 텍스트 파일로 저장
 
 # SQuAD 데이터셋 불러오기
 squad_contexts, squad_questions, squad_answers = load_squad_dataset()
