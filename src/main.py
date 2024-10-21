@@ -1,7 +1,7 @@
 # main.py
 
 from dataset_loader import load_wmt_dataset, load_squad_dataset, load_cnn_daily_dataset
-from dataset_to_txt import save_to_txt
+from dataset_to_txt import save_and_compress_dataset_to_zip
 from evaluate_metrics import calculate_bleu, calculate_rouge, calculate_bert_score, calculate_combined_metric
 from visualize import visualize_scores
 from wmt_trans import translate_wmt_english_to_german
@@ -11,19 +11,19 @@ wmt_dataset = load_wmt_dataset()
 wmt_english_data = [item['en'] for item in wmt_dataset]
 wmt_references = translate_wmt_english_to_german(wmt_english_data) # 영어 문장을 독일어로 번역
 wmt_hypotheses = [item['de'] for item in wmt_dataset] # 독일어 문장
-save_to_txt((wmt_references, wmt_hypotheses), "wmt")  # WMT 데이터셋 텍스트 파일로 저장
+save_and_compress_dataset_to_zip((wmt_references, wmt_hypotheses), "wmt")  # WMT 데이터셋 텍스트 파일로 저장
 
 # SQuAD 데이터셋 불러오기
 squad_contexts, squad_questions, squad_answers = load_squad_dataset()
 squad_references = [answer['text'][0] for answer in squad_answers]  # 정답 텍스트 리스트 추출
 squad_hypotheses = squad_contexts  # 문맥이 번역본이라고 가정
-save_to_txt((squad_contexts, squad_questions, squad_answers), "squad")  # SQuAD 데이터셋 텍스트 파일로 저장
+save_and_compress_dataset_to_zip((squad_contexts, squad_questions, squad_answers), "squad")  # SQuAD 데이터셋 텍스트 파일로 저장
 
 # CNN/DAILYMAIL 데이터셋 불러오기
 cnn_articles, cnn_highlights = load_cnn_daily_dataset()
 cnn_references = cnn_highlights  # 요약문이 정답이라고 가정
 cnn_hypotheses = cnn_articles  # 기사 본문이 번역본이라고 가정
-save_to_txt((cnn_articles, cnn_highlights), "cnn")  # CNN/DailyMail 데이터셋 텍스트 파일로 저장
+save_and_compress_dataset_to_zip((cnn_articles, cnn_highlights), "cnn")  # CNN/DailyMail 데이터셋 텍스트 파일로 저장
 
 # 데이터 양을 줄이기 위해 샘플링 (예: 처음 100개만 사용)
 num_samples = 100
