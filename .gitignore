@@ -364,3 +364,6 @@ $RECYCLE.BIN/
 
 # Ignore Idea Files
 .idea
+
+# TAACO 디렉토리를 무시
+TAACO/
