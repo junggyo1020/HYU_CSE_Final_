@@ -37,7 +37,7 @@ def process_all_files(input_directory, output_directory, selected_columns):
 
 # 실행
 input_directory = "taassc_result"
-output_directory = "taassc_average_result"
+output_directory = "taassc_average_results"
 os.makedirs(output_directory, exist_ok=True)
 
 # 선택된 열 목록 수정
