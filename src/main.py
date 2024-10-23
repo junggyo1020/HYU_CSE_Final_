@@ -46,8 +46,7 @@ def run_weight_experiments_with_visualization(dataset_name, references, hypothes
         print(f"실험 {i + 1}: 품사별 가중치 {pos_weights}")
 
         # Combined Metric 계산
-        combined_score = calculate_combined_metric(references, hypotheses, ngram_weight=0.3, max_n=4,
-                                                   pos_weights=pos_weights)
+        combined_score = calculate_combined_metric(dataset_name, references, hypotheses, pos_weights=pos_weights)
 
         # 결과 저장
         combined_scores.append(combined_score)
@@ -110,21 +109,21 @@ print("Calculating WMT scores...")
 wmt_bleu = calculate_bleu(wmt_references, wmt_hypotheses)
 wmt_rouge = calculate_rouge(wmt_references, wmt_hypotheses)
 wmt_bert = calculate_bert_score(wmt_references, wmt_hypotheses)
-wmt_combined = calculate_combined_metric(wmt_references, wmt_hypotheses)
+wmt_combined = calculate_combined_metric("WMT", wmt_references, wmt_hypotheses)
 
 # SQuAD 점수 계산
 print("Calculating SQuAD scores...")
 squad_bleu = calculate_bleu(squad_references, squad_hypotheses)
 squad_rouge = calculate_rouge(squad_references, squad_hypotheses)
 squad_bert = calculate_bert_score(squad_references, squad_hypotheses)
-squad_combined = calculate_combined_metric(squad_references, squad_hypotheses)
+squad_combined = calculate_combined_metric("SQuAD", squad_references, squad_hypotheses)
 
 # CNN 점수 계산
 print("Calculating CNN/DailyMail scores...")
 cnn_bleu = calculate_bleu(cnn_references, cnn_hypotheses)
 cnn_rouge = calculate_rouge(cnn_references, cnn_hypotheses)
 cnn_bert = calculate_bert_score(cnn_references, cnn_hypotheses)
-cnn_combined = calculate_combined_metric(cnn_references, cnn_hypotheses)
+cnn_combined = calculate_combined_metric("CNN/DailyMail", cnn_references, cnn_hypotheses)
 
 # 각 데이터셋의 점수 리스트
 bleu_scores = [wmt_bleu, squad_bleu, cnn_bleu]
