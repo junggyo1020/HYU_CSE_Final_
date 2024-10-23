@@ -18,3 +18,13 @@ TAASSC에서는 압축된 파일을 읽을 수 있도록 코드를 수정하거�
 회귀 분석을 하기 위해선, TAACO와 TAASSC의 CSV 파일의 결과 값들을 수학적으로 산술 평균을 내야함. CSV 파일에서 셀을 이용하여 직접 값을
 계산하든가, 결과로 나온 CSV 파일을 처리하여 수학적 산술 평균을 진행하는 개별 파이썬 코드를 작성해야 함. 아니면 TAACO와 TAASSC의 코드를
 수정하여, 자동으로 수학적 산술 평균을 계산하게끔 할 수도 있음.
+
+TAACO와 TAASSC의 GUI에서 선택해야할 옵션들의 리스트 :
+
+TAACO
+Lemma tokens to analyze for lexical overlap and TTR: 'All'
+Lexical overlap: 'Sentence', 'Paragraph', 'Adjacent', 'Adjacent 2'
+Other indices: 'TTR'
+
+TAASSC
+Clause Complexity, Phrase Complexity, Syntactic Sophistication, Syntactic Components

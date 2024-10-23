@@ -1,4 +1,6 @@
-#-*- coding: utf-8 -*- 
+# TAACO_2.1.3.py
+
+#-*- coding: utf-8 -*-
 #(for potential non-ASCII encoding)#Tool for the Automatic Analysis of COhesion
 
 #from __future__ import division
