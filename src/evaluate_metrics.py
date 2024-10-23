@@ -19,7 +19,7 @@ def calculate_bleu(references, hypotheses):
     return bleu.score / 100 # 백분율로 변환
 
 def calculate_rouge(references, hypotheses):
-    scorer = rouge_scorer.RougeScorer(['rouge1', 'rougeL'], use_stemmer=True)
+    scorer = rouge_scorer.RougeScorer(['rougeL'], use_stemmer=True)
     scores = [scorer.score(ref, hyp) for ref, hyp in zip(references, hypotheses)]
     rouge_l_f1 = np.mean([score['rougeL'].fmeasure for score in scores])
     return rouge_l_f1
@@ -83,7 +83,7 @@ def calculate_all_ngram_match_with_pos(references, hypotheses, max_n=4, pos_weig
     return np.mean(all_ngram_scores)
 
 
-def calculate_combined_metric(references, hypotheses, ngram_weight=0.6, max_n=4, pos_weights=None):
+def calculate_combined_metric(dataset_name, references, hypotheses, max_n=4, pos_weights=None):
     """
     N-그램 일치율 (품사 기반 가중치 포함)과 BERTScore를 결합한 평가 메트릭
     """
@@ -98,14 +98,16 @@ def calculate_combined_metric(references, hypotheses, ngram_weight=0.6, max_n=4,
     # 품사 가중치를 포함한 N-그램 일치율 계산
     combined_ngram_score = calculate_all_ngram_match_with_pos(references, hypotheses, max_n=max_n, pos_weights=pos_weights)
 
-    # 문장의 평균 길이에 따라 가중치 조정
-    avg_sentence_length = np.mean([len(ref.split()) for ref in references])
-
-    if avg_sentence_length > 43:  # 문장이 길면 BERTScore에 더 높은 가중치 부여
-        dynamic_ngram_weight = max(ngram_weight - 0.2, 0.1)
-    else:  # 문장이 짧으면 N-그램에 더 높은 가중치 부여
-        dynamic_ngram_weight = min(ngram_weight + 0.2, 0.9)
+    # 데이터셋 별 가중치 조정
+    if dataset_name == "WMT":
+        ngram_weight = 0.9 # N-그램 90%, BERTScore 10%
+    elif dataset_name == "SQuAD":
+        ngram_weight = 0.2
+    elif dataset_name == "CNN/DailyMail":
+        ngram_weight = 0.1
+    else:
+        ngram_weight = 0.5
 
     # 최종 결합 점수 계산
-    combined_score = (1 - dynamic_ngram_weight) * bert_f1 + dynamic_ngram_weight * combined_ngram_score
+    combined_score = (1 - ngram_weight) * bert_f1 + ngram_weight * combined_ngram_score
     return combined_score
