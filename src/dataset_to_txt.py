@@ -6,7 +6,7 @@
 import os
 import zipfile
 
-# 데이터를 텍스트 파일로 저장하고, 바로 압축하는 함수
+# 데이터를 텍스트 파일로 저장하는 함수
 def save_dataset_to_folder(dataset, name_suffix, output_dir="loaded_data_txt"):
     """
     Args:
