@@ -54,7 +54,7 @@ def calculate_weighted_ngram_match(reference, candidate, n, pos_weights):
         weight = 1.0  # 기본 가중치는 1.0
         for pos in ngram_pos_tags:
             if pos in pos_weights:
-                weight *= pos_weights[pos] # 품사에 해당하는 가중치를 곱함
+                weight *= pos_weights[pos]  # 품사에 해당하는 가중치를 곱함
 
         total_weight += ref_counter[ngram] * weight  # 전체 가중치 계산 (빈도 × 품사 가중치)
 
