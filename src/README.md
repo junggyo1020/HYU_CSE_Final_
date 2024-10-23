@@ -45,3 +45,4 @@ final_score = 0.4 * combined_Score + 0.3 * TAACO_Score + 0.3 * TAASSC_Score
 3. 우선순위에 따라서 부여한 임의의 고정 가중치를 곱한, TAACO_Score, TAASSC_Score를 구하는 파이썬 모듈 구현
 4. cobined_Score, TAACO_Score, TAASSC_Score의 임의의 고정된 가중치를 곱하여 final_score를 구하는 파이썬 모듈 구현
 
+TAASSC 결과 지표의 F, H, T, Y, AF
