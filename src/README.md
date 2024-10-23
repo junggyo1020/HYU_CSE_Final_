@@ -28,3 +28,20 @@ Other indices: 'TTR'
 
 TAASSC
 Clause Complexity, Phrase Complexity, Syntactic Sophistication, Syntactic Components
+
+TAACO 가중치 설정 관련 : 서브 데이터셋(전체 데이터셋의 1/100)의 결과값을 평균을 냄. 하나의 지표 벡터가 나옴. 설정한 우선순위에 맞춰 임의로
+(고정된 수치의) 가중치를 부여함.
+
+TAACO의 지표 벡터 : 1. Lexical Overlap, 2. TTR, 3. Sentence Overlap, 4. Paragraph Overlap, 5. Adjacent Overlap, 6. Adjacent 2 Overlap
+
+cobined_Score, TAACO_Score, TAASSC_Score;
+
+final_score = a * combined_Score + b * TAACO_Score + c * TAASSC_Score
+final_score = 0.4 * combined_Score + 0.3 * TAACO_Score + 0.3 * TAASSC_Score
+
+지금 해야할 것 :
+1. 텍스트 파일들의 디렉토리를 압축하지 않게 수정 -정교
+2. TAACO와 TAASSC의 결과인 각각의 csv 파일들에서 각 지표별 평균값 추출하는 load_csv.py 구현 -지우
+3. 우선순위에 따라서 부여한 임의의 고정 가중치를 곱한, TAACO_Score, TAASSC_Score를 구하는 파이썬 모듈 구현
+4. cobined_Score, TAACO_Score, TAASSC_Score의 임의의 고정된 가중치를 곱하여 final_score를 구하는 파이썬 모듈 구현
+
