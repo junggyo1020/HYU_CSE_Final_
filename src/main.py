@@ -165,7 +165,7 @@ def save_combined_score(dataset_name, score):
         writer = csv.writer(file)
         # 첫 번째 행과 두 번째 행을 채우기 위한 빈 리스트
         writer.writerow(['Filename', 'Score'])
-        writer.writerow(['', score])
+        writer.writerow([f'{dataset_name}_combined_score', score])
 
 
 # 각 데이터셋에 대해 CSV 파일 생성
