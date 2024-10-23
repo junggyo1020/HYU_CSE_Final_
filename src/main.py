@@ -145,6 +145,33 @@ rouge_scores = [wmt_rouge, squad_rouge, cnn_rouge]
 bert_scores = [wmt_bert, squad_bert, cnn_bert]
 combined_scores = [wmt_combined, squad_combined, cnn_combined]
 
+# CSV 파일 생성을 위한 모듈 추가
+import csv
+
+# Combined scores 리스트
+dataset_names = ['wmt', 'squad', 'cnn']
+
+# 파일을 저장할 디렉토리
+output_dir = 'combined_scores'
+
+
+# CSV 파일 생성 함수
+def save_combined_score(dataset_name, score):
+    # 파일 경로 설정
+    output_file = f'{output_dir}/{dataset_name}_combined_score.csv'
+
+    # CSV 파일 생성 및 2행 2열에 점수 저장
+    with open(output_file, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        # 첫 번째 행과 두 번째 행을 채우기 위한 빈 리스트
+        writer.writerow(['Filename', 'Score'])
+        writer.writerow(['', score])
+
+
+# 각 데이터셋에 대해 CSV 파일 생성
+for dataset_name, score in zip(dataset_names, combined_scores):
+    save_combined_score(dataset_name, score)
+
 # 점수 시각화
 visualize_scores(bleu_scores, rouge_scores, bert_scores, combined_scores)
 
