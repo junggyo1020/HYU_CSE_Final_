@@ -84,14 +84,14 @@ cnn_references = cnn_references[:num_samples]
 cnn_hypotheses = cnn_hypotheses[:num_samples]
 
 # 품사 가중치 실험
-print("Running WMT weight experiments...")
-run_weight_experiments_with_visualization("WMT", wmt_references, wmt_hypotheses, pos_weights_list)
-
-print("Running SQuAD weight experiments...")
-run_weight_experiments_with_visualization("SQuAD", squad_references, squad_hypotheses, pos_weights_list)
-
-print("Running CNN/DailyMail weight experiments...")
-run_weight_experiments_with_visualization("CNN/DailyMail", cnn_references, cnn_hypotheses, pos_weights_list)
+# print("Running WMT weight experiments...")
+# run_weight_experiments_with_visualization("WMT", wmt_references, wmt_hypotheses, pos_weights_list)
+#
+# print("Running SQuAD weight experiments...")
+# run_weight_experiments_with_visualization("SQuAD", squad_references, squad_hypotheses, pos_weights_list)
+#
+# print("Running CNN/DailyMail weight experiments...")
+# run_weight_experiments_with_visualization("CNN/DailyMail", cnn_references, cnn_hypotheses, pos_weights_list)
 
 # n_gram_weight 가중치 실험
 # print("Running WMT n-gram weight experiments...")
