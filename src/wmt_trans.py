@@ -1,4 +1,5 @@
-#WMT 데이터셋을 번역하는 모듈
+# wmt_trans.py
+# WMT 데이터셋을 번역하는 모듈
 
 # googletrans를 이용하여 영어 데이터를 독일어로 번역하는 함수
 from googletrans import Translator
