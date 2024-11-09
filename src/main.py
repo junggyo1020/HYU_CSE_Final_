@@ -149,7 +149,7 @@ import csv
 dataset_names = ['wmt', 'squad', 'cnn']
 
 # 파일을 저장할 디렉토리
-output_dir = 'combined_scores'
+output_dir = 'csv_files/combined_scores'
 
 
 # CSV 파일 생성 함수

@@ -5,9 +5,9 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 # 디렉토리 경로 설정
-combined_scores_dir = 'combined_scores'
-taaco_scores_dir = 'taaco_scores'
-taassc_scores_dir = 'taassc_scores'
+combined_scores_dir = 'csv_files/combined_scores'
+taaco_scores_dir = 'csv_files/taaco_scores'
+taassc_scores_dir = 'csv_files/taassc_scores'
 
 # 가중치 설정
 combined_weight = 0.4
