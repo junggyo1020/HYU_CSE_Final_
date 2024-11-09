@@ -40,6 +40,7 @@ from threading import Thread
 # import shutil
 #import subprocess
 import numpy as np
+
 # from collections import Counter
 from operator import itemgetter
 # try:
@@ -874,21 +875,25 @@ def main(indir, outdir, varDict, gui = False, source_text = False):
 			return target_syn_dict
 
 		#Revised 6-21-17
+		# JW : 정규화 적용
 		def syn_overlap(header_list, index_list, name_suffix, list, syn_dict):
-			counter = len(list)		
+			counter = len(list)
 			if counter < 2:
 				syn_counter_norm = 0
 			else:
-				syn_counter=0
-				for i in range(counter-1):
+				syn_counter = 0
+				for i in range(counter - 1):
 					for items in set(list[i]):
-						for item in syn_dict[i+1]:
+						for item in syn_dict[i + 1]:
 							if items in item:
-								syn_counter +=1
-				syn_counter_norm = safe_divide(syn_counter, counter-1) #note these are divided by segments
+								syn_counter += 1
+				# 기존 계산 후 정규화 적용
+				syn_counter_norm = safe_divide(syn_counter, counter - 1)
+				syn_counter_norm = np.tanh(syn_counter_norm)  # 정규화 함수 적용
+
 			header_list.append("syn_overlap_" + name_suffix)
 			index_list.append(syn_counter_norm)
-		
+
 		#created 6-21-17 replaces regex_count
 		def multi_list_counter(header_list, index_list, word_list, target_list, nwords):
 			#print target_list
