@@ -8,14 +8,8 @@ from evaluate_metrics import calculate_bleu, calculate_rouge, calculate_bert_sco
 from visualize import visualize_scores, visualize_ngram_weight_experiment_results, visualize_weight_experiment_results
 from wmt_trans import translate_wmt_english_to_german
 
-# # 로깅 설정
-# logging.basicConfig(
-#     level=logging.INFO,  # 로그 레벨 설정 (INFO 레벨로 설정)
-#     format='%(asctime)s - %(message)s',  # 로그 출력 형식
-#     datefmt='%Y-%m-%d %H:%M:%S',  # 날짜/시간 형식
-#     handlers=[logging.FileHandler("program_log.txt"),  # 로그를 파일에 저장
-#               logging.StreamHandler()]  # 콘솔에도 출력
-# )
+# 로깅 설정
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 # 다양한 ngram_weight 값 설정
 ngram_weight_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
@@ -66,14 +60,15 @@ def run_weight_experiments_with_visualization(dataset_name, references, hypothes
     # 실험 결과 시각화
     visualize_weight_experiment_results(dataset_name, pos_weights_list, combined_scores)
 
-# start_time = datetime.now()
-# logging.info("프로그램 실행 시작")
+
+start_time = datetime.now()
+logging.info("프로그램 실행 시작")
 
 # WMT 데이터셋 불러오기
 wmt_dataset = load_wmt_dataset()
 wmt_english_data = [item['en'] for item in wmt_dataset]
-wmt_references = translate_wmt_english_to_german(wmt_english_data) # 영어 문장을 독일어로 번역
-wmt_hypotheses = [item['de'] for item in wmt_dataset] # 독일어 문장
+wmt_references = translate_wmt_english_to_german(wmt_english_data)  # 영어 문장을 독일어로 번역
+wmt_hypotheses = [item['de'] for item in wmt_dataset]  # 독일어 문장
 save_dataset_to_folder((wmt_references, wmt_hypotheses), "WMT")
 
 # SQuAD 데이터셋 불러오기
@@ -109,14 +104,16 @@ cnn_hypotheses = cnn_hypotheses[:num_samples]
 
 # n_gram_weight 가중치 실험
 # print("Running WMT n-gram weight experiments...")
-# run_ngram_weight_experiments("WMT", wmt_references, wmt_hypotheses, ngram_weight_list, pos_weights={'NOUN': 1.2, 'VERB': 1.1, 'ADJ': 1.0})
+# run_ngram_weight_experiments("WMT", wmt_references, wmt_hypotheses, ngram_weight_list,
+#                              pos_weights={'NOUN': 1.2, 'VERB': 1.1, 'ADJ': 1.0})
 #
 # print("Running SQuAD n-gram weight experiments...")
-# run_ngram_weight_experiments("SQuAD", squad_references, squad_hypotheses, ngram_weight_list, pos_weights={'NOUN': 1.2, 'VERB': 1.1, 'ADJ': 1.0})
+# run_ngram_weight_experiments("SQuAD", squad_references, squad_hypotheses, ngram_weight_list,
+#                              pos_weights={'NOUN': 1.2, 'VERB': 1.1, 'ADJ': 1.0})
 #
 # print("Running CNN n-gram weight experiments...")
-# run_ngram_weight_experiments("CNN/DailyMail", cnn_references, cnn_hypotheses, ngram_weight_list, pos_weights={'NOUN': 1.2, 'VERB': 1.1, 'ADJ': 1.0})
-
+# run_ngram_weight_experiments("CNN/DailyMail", cnn_references, cnn_hypotheses, ngram_weight_list,
+#                              pos_weights={'NOUN': 1.2, 'VERB': 1.1, 'ADJ': 1.0})
 
 # WMT 점수 계산
 print("Calculating WMT scores...")
@@ -175,9 +172,9 @@ for dataset_name, score in zip(dataset_names, combined_scores):
 # 점수 시각화
 visualize_scores(bleu_scores, rouge_scores, bert_scores, combined_scores)
 
-# end_time = datetime.now()
-# logging.info("프로그램 종료")
-#
-# # 실행 시간 계산 및 출력
-# elapsed_time = end_time - start_time
-# logging.info(f"프로그램 총 실행 시간: {elapsed_time}")
+end_time = datetime.now()
+logging.info("프로그램 종료")
+
+# 실행 시간 계산 및 출력
+elapsed_time = end_time - start_time
+logging.info(f"프로그램 총 실행 시간: {elapsed_time}")
