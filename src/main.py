@@ -7,7 +7,7 @@ from datetime import datetime
 from dataset_loader import load_wmt_dataset, load_squad_dataset, load_cnn_daily_dataset
 from dataset_to_txt import save_dataset_to_folder
 from evaluate_metrics import calculate_bleu, calculate_rouge, calculate_bert_score, calculate_combined_metric
-from wmt_trans import translate_wmt_english_to_german
+from wmt_trans import translate_wmt_german_to_english
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -17,9 +17,9 @@ logging.info("프로그램 실행 시작")
 
 # WMT 데이터셋 불러오기
 wmt_dataset = load_wmt_dataset()
-wmt_english_data = [item['en'] for item in wmt_dataset]
-wmt_references = translate_wmt_english_to_german(wmt_english_data)
-wmt_hypotheses = [item['de'] for item in wmt_dataset]
+wmt_english_data = [item['de'] for item in wmt_dataset]
+wmt_references = translate_wmt_german_to_english(wmt_english_data)
+wmt_hypotheses = [item['en'] for item in wmt_dataset]
 wmt_saved_path = save_dataset_to_folder((wmt_references, wmt_hypotheses), "WMT")
 
 # SQuAD 데이터셋 불러오기
@@ -30,8 +30,8 @@ squad_saved_path = save_dataset_to_folder((squad_references, squad_hypotheses), 
 
 # CNN/DailyMail 데이터셋 불러오기
 cnn_articles, cnn_highlights = load_cnn_daily_dataset()
-cnn_references = cnn_highlights
-cnn_hypotheses = cnn_articles
+cnn_references = cnn_articles
+cnn_hypotheses = cnn_highlights
 cnn_saved_path = save_dataset_to_folder((cnn_references, cnn_hypotheses), "CNN_DailyMail")
 
 # 서브 데이터셋 경로와 이름
