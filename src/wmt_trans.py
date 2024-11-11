@@ -7,12 +7,12 @@ from googletrans import Translator
 # Google Translate 객체 생성
 translator = Translator()
 
-def translate_wmt_english_to_german(wmt_english_data):
+def translate_wmt_german_to_english(wmt_data):
     translated_sentences = []
 
-    for sentence in wmt_english_data:
-        # 영어를 독일어로 번역
-        translated = translator.translate(sentence, src='en', dest='de')
+    for sentence in wmt_data:
+        # 독일어를 영어로 번역
+        translated = translator.translate(sentence, src='de', dest='en')
         translated_sentences.append(translated.text)
 
     return translated_sentences
