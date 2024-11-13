@@ -82,6 +82,7 @@ cnn_articles, cnn_highlights = load_cnn_daily_dataset()
 cnn_references = cnn_highlights  # 요약문이 정답이라고 가정
 cnn_hypotheses = cnn_articles  # 기사 본문이 번역본이라고 가정
 save_dataset_to_folder((cnn_articles, cnn_references), "CNN_DailyMail")
+save_dataset_to_folder(cnn_references, "CNN_DailyMail_Summary") # 요약문만 저장
 
 # 데이터 양을 줄이기 위해 샘플링 (예: 처음 100개만 사용)
 num_samples = 100
