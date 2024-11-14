@@ -4,7 +4,7 @@ import csv
 import os
 import logging
 from datetime import datetime
-from dataset_loader import load_wmt_dataset, load_squad_dataset, load_cnn_daily_dataset
+from dataset_loader import load_wmt_dataset, load_squad_dataset, load_cnn_daily_dataset, load_sts_dataset
 from dataset_to_txt import save_dataset_to_folder
 from evaluate_metrics import calculate_bleu, calculate_rouge, calculate_bert_score, calculate_combined_metric
 from wmt_trans import translate_wmt_german_to_english
@@ -23,9 +23,8 @@ wmt_hypotheses = [item['en'] for item in wmt_dataset]
 wmt_saved_path = save_dataset_to_folder((wmt_references, wmt_hypotheses), "WMT")
 
 # SQuAD 데이터셋 불러오기
-squad_contexts, _, squad_answers = load_squad_dataset()
-squad_references = [answer['text'][0] for answer in squad_answers]
-squad_hypotheses = squad_contexts  # 문맥을 번역본으로 가정
+squad_references, squad_hypotheses = load_squad_dataset()
+squad_references = [answer['text'][0] for answer in squad_references]
 squad_saved_path = save_dataset_to_folder((squad_references, squad_hypotheses), "SQuAD")
 
 # CNN/DailyMail 데이터셋 불러오기
@@ -34,11 +33,18 @@ cnn_references = cnn_articles
 cnn_hypotheses = cnn_highlights
 cnn_saved_path = save_dataset_to_folder((cnn_references, cnn_hypotheses), "CNN_DailyMail")
 
+# STS 데이터셋 불러오기
+sts_sentence1, sts_sentence2 = load_sts_dataset()
+sts_references = sts_sentence1
+sts_hypotheses = sts_sentence2
+sts_saved_path = save_dataset_to_folder((sts_references, sts_hypotheses), "STS")
+
 # 서브 데이터셋 경로와 이름
 dataset_names = {
     "WMT": wmt_saved_path,
     "SQuAD": squad_saved_path,
-    "CNN_DailyMail": cnn_saved_path
+    "CNN_DailyMail": cnn_saved_path,
+    "STS": sts_saved_path
 }
 
 # Combined Score 저장할 디렉토리
@@ -48,6 +54,7 @@ os.makedirs(output_dir, exist_ok=True)
 logging.info(f"WMT 데이터셋 저장 경로: {wmt_saved_path}")
 logging.info(f"SQuAD 데이터셋 저장 경로: {squad_saved_path}")
 logging.info(f"CNN 데이터셋 저장 경로: {cnn_saved_path}")
+logging.info(f"STS 데이터셋 저장 경로: {sts_saved_path}")
 
 
 # CSV 저장 함수 정의
