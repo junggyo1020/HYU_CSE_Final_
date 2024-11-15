@@ -1,0 +1,2 @@
+Another radar sensor checks whether the green phase for pedestrians can be ended.
+An additional radar sensor checks whether the green phase for the pedestrian can be ended.

@@ -30,7 +30,7 @@ squad_saved_path = save_dataset_to_folder((squad_references, squad_hypotheses), 
 # CNN/DailyMail 데이터셋 불러오기
 cnn_articles, cnn_highlights = load_cnn_daily_dataset()
 cnn_references = cnn_articles
-cnn_hypotheses = cnn_highlights
+cnn_hypotheses = [" ".join(highlight.split("\n")) for highlight in cnn_highlights] # 여러 문장을 하나로 묶음
 cnn_saved_path = save_dataset_to_folder((cnn_references, cnn_hypotheses), "CNN_DailyMail")
 
 # STS 데이터셋 불러오기
@@ -80,8 +80,8 @@ for dataset_name, saved_path in dataset_names.items():
             entry_file = os.path.join(sub_dataset_folder, f"{dataset_name}_Entry_{idx}.txt")
             with open(entry_file, 'r') as f:
                 lines = f.readlines()
-                references.append(lines[0].strip())  # 첫 번째 줄을 references로 사용
-                hypotheses.append(lines[1].strip())  # 두 번째 줄을 hypotheses로 사용
+                references.append(lines[0].strip())  # 첫 번째 요소를 references로 사용
+                hypotheses.append(lines[1].strip())  # 두 번째 요소를 hypotheses로 사용
 
         # 각 점수 계산
         bleu_score = calculate_bleu(references, hypotheses)
