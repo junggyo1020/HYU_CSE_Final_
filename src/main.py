@@ -5,7 +5,7 @@ import os
 import logging
 from datetime import datetime
 from dataset_loader import load_wmt_dataset, load_squad_dataset, load_cnn_daily_dataset, load_sts_dataset
-from dataset_to_txt import save_dataset_to_folder
+from dataset_to_txt import save_dataset_to_folder, save_highlights_to_folder
 from evaluate_metrics import calculate_bleu, calculate_rouge, calculate_bert_score, calculate_combined_metric
 from wmt_trans import translate_wmt_german_to_english
 
@@ -30,8 +30,11 @@ squad_saved_path = save_dataset_to_folder((squad_references, squad_hypotheses), 
 # CNN/DailyMail 데이터셋 불러오기
 cnn_articles, cnn_highlights = load_cnn_daily_dataset()
 cnn_references = cnn_articles
-cnn_hypotheses = [" ".join(highlight.split("\n")) for highlight in cnn_highlights] # 여러 문장을 하나로 묶음
+cnn_hypotheses = [" ".join(highlight.split("\n")) for highlight in cnn_highlights]  # 여러 문장을 하나로 묶음
 cnn_saved_path = save_dataset_to_folder((cnn_references, cnn_hypotheses), "CNN_DailyMail")
+
+# CNN highlights만 저장
+cnn_highlights_saved_path = save_highlights_to_folder(cnn_highlights, "CNN_Highlights")
 
 # STS 데이터셋 불러오기
 sts_sentence1, sts_sentence2 = load_sts_dataset()
@@ -44,6 +47,7 @@ dataset_names = {
     "WMT": wmt_saved_path,
     "SQuAD": squad_saved_path,
     "CNN_DailyMail": cnn_saved_path,
+    "CNN_Highlights": cnn_highlights_saved_path,
     "STS": sts_saved_path
 }
 
@@ -54,6 +58,7 @@ os.makedirs(output_dir, exist_ok=True)
 logging.info(f"WMT 데이터셋 저장 경로: {wmt_saved_path}")
 logging.info(f"SQuAD 데이터셋 저장 경로: {squad_saved_path}")
 logging.info(f"CNN 데이터셋 저장 경로: {cnn_saved_path}")
+logging.info(f"CNN Highlights 저장 경로: {cnn_highlights_saved_path}")
 logging.info(f"STS 데이터셋 저장 경로: {sts_saved_path}")
 
 
