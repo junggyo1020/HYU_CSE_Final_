@@ -18,8 +18,8 @@ logging.info("프로그램 실행 시작")
 # WMT 데이터셋 불러오기
 wmt_dataset = load_wmt_dataset()
 wmt_english_data = [item['de'] for item in wmt_dataset]
-wmt_references = translate_wmt_german_to_english(wmt_english_data)
-wmt_hypotheses = [item['en'] for item in wmt_dataset]
+wmt_references = [item['en'] for item in wmt_dataset]
+wmt_hypotheses = translate_wmt_german_to_english(wmt_english_data)
 wmt_saved_path = save_dataset_to_folder((wmt_references, wmt_hypotheses), "WMT")
 
 # SQuAD 데이터셋 불러오기
