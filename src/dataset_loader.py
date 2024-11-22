@@ -27,7 +27,7 @@ def load_squad_dataset():
         generated_answers.append(result['answer'])
 
     print("SQuAD dataset proceed with QA model.")
-    return original_answers, generated_answers
+    return original_answers, generated_answers, contexts, questions
 
 def load_cnn_daily_dataset():
     print("Loading CNN/DailyMail dataset...")
