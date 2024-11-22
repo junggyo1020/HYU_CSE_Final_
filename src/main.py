@@ -5,7 +5,7 @@ import os
 import logging
 from datetime import datetime
 from dataset_loader import load_wmt_dataset, load_squad_dataset, load_cnn_daily_dataset, load_sts_dataset
-from dataset_to_txt import save_dataset_to_folder, save_highlights_to_folder
+from dataset_to_txt import save_dataset_to_folder, save_highlights_to_folder, save_full_squads_to_folder
 from evaluate_metrics import calculate_bleu, calculate_rouge, calculate_bert_score, calculate_combined_metric
 from wmt_trans import translate_wmt_german_to_english
 
@@ -23,9 +23,12 @@ wmt_hypotheses = translate_wmt_german_to_english(wmt_english_data)
 wmt_saved_path = save_dataset_to_folder((wmt_references, wmt_hypotheses), "WMT")
 
 # SQuAD 데이터셋 불러오기
-squad_references, squad_hypotheses = load_squad_dataset()
+squad_references, squad_hypotheses, squad_contexts, squad_questions = load_squad_dataset()
 squad_references = [answer['text'][0] for answer in squad_references]
 squad_saved_path = save_dataset_to_folder((squad_references, squad_hypotheses), "SQuAD")
+
+# 인간평가를 위한 별도의 SQuAD 데이터셋 불러오기
+squad_full_saved_path = save_full_squads_to_folder((squad_contexts, squad_questions, squad_references, squad_hypotheses), "SQuAD_Full")
 
 # CNN/DailyMail 데이터셋 불러오기
 cnn_articles, cnn_highlights = load_cnn_daily_dataset()
@@ -46,8 +49,9 @@ sts_saved_path = save_dataset_to_folder((sts_references, sts_hypotheses), "STS")
 dataset_names = {
     "WMT": wmt_saved_path,
     "SQuAD": squad_saved_path,
+    # "SQuAD_Full": squad_full_saved_path,
     "CNN_DailyMail": cnn_saved_path,
-    "CNN_Highlights": cnn_highlights_saved_path,
+    # "CNN_Highlights": cnn_highlights_saved_path,
     "STS": sts_saved_path
 }
 
@@ -57,8 +61,9 @@ os.makedirs(output_dir, exist_ok=True)
 
 logging.info(f"WMT 데이터셋 저장 경로: {wmt_saved_path}")
 logging.info(f"SQuAD 데이터셋 저장 경로: {squad_saved_path}")
+# logging.info(f"SQuAD Full 데이터셋 저장 경로: {squad_full_saved_path}")
 logging.info(f"CNN 데이터셋 저장 경로: {cnn_saved_path}")
-logging.info(f"CNN Highlights 저장 경로: {cnn_highlights_saved_path}")
+# logging.info(f"CNN Highlights 데이터셋 저장 경로: {cnn_highlights_saved_path}")
 logging.info(f"STS 데이터셋 저장 경로: {sts_saved_path}")
 
 
