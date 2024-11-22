@@ -1,3 +1,5 @@
+# cnn과 cnn 요약문의 taaco 점수를 평균 내어 합치는 모듈
+
 import csv
 
 # 두 CSV 파일의 파일 경로
