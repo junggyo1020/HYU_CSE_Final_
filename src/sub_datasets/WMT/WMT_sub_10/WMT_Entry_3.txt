@@ -1,2 +1,2 @@
-There are much cheaper and less intrusive ways to implement this.
 There are a lot less expensive and less intrusive ways to do this.
+There are much cheaper and less intrusive ways to implement this.

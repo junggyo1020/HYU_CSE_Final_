@@ -1,5 +1,6 @@
 # main.py
 
+import pandas as pd
 import csv
 import os
 import logging
@@ -40,9 +41,10 @@ cnn_saved_path = save_dataset_to_folder((cnn_references, cnn_hypotheses), "CNN_D
 cnn_highlights_saved_path = save_highlights_to_folder(cnn_highlights, "CNN_Highlights")
 
 # STS 데이터셋 불러오기
-sts_sentence1, sts_sentence2 = load_sts_dataset()
+sts_sentence1, sts_sentence2, sts_scores = load_sts_dataset()
 sts_references = sts_sentence1
 sts_hypotheses = sts_sentence2
+sts_scores = sts_scores
 sts_saved_path = save_dataset_to_folder((sts_references, sts_hypotheses), "STS")
 
 # 서브 데이터셋 경로와 이름
@@ -102,6 +104,42 @@ for dataset_name, saved_path in dataset_names.items():
         # 점수 저장
         save_scores_to_csv(dataset_name, sub_dataset_idx, bleu_score, rouge_score, bert_score, combined_score)
         logging.info(f"{dataset_name} 서브 데이터셋 {sub_dataset_idx + 1}의 점수 저장 완료.")
+
+# Human Evaluation - STS 점수 정규화 및 평균 계산
+def normalize_and_average_scores(scores, min_score=0, max_score=5):
+    """
+    점수를 정규화하고 평균을 계산합니다.
+    Args:
+        scores: 원래의 점수 리스트 (0~5 범위).
+        min_score: 정규화의 최소 값 (기본값: 0).
+        max_score: 정규화의 최대 값 (기본값: 5).
+    Returns:
+        정규화된 점수의 평균 값 (0~1 범위).
+    """
+    normalized_scores = [(score - min_score) / (max_score - min_score) for score in scores]
+    return sum(normalized_scores) / len(normalized_scores)
+
+# 데이터를 10개의 서브 데이터셋으로 나누기
+chunk_size = 10
+sub_datasets = [
+    (sts_references[i:i + chunk_size], sts_hypotheses[i:i + chunk_size], sts_scores[i:i + chunk_size])
+    for i in range(0, len(sts_references), chunk_size)
+]
+
+# 서브 데이터셋별로 정규화 및 평균 계산
+sts_scores_results = []
+for idx, (_, _, scores) in enumerate(sub_datasets):
+    average_score = normalize_and_average_scores(scores)
+    sts_scores_results.append(average_score)
+
+# STS 평균 점수 요약 파일 생성
+summary_file = os.path.join(output_dir, "STS_summary_scores.csv")
+summary_data = {"SubDataset": [f"STS_sub_{i + 1}" for i in range(len(sts_scores_results))],
+                "AverageScore": sts_scores_results}
+
+df_summary = pd.DataFrame(summary_data)
+df_summary.to_csv(summary_file, index=False)
+logging.info("STS 전체 요약 점수 파일 저장 완료.")
 
 # 프로그램 종료 및 실행 시간 출력
 end_time = datetime.now()

@@ -100,9 +100,9 @@ def calculate_combined_metric(dataset_name, references, hypotheses, max_n=4, pos
 
     # 데이터셋 별 가중치 조정
     if dataset_name == "WMT":
-        ngram_weight = 0.9 # N-그램 90%, BERTScore 10%
+        ngram_weight = 0.4 # N-그램 40%, BERTScore 60%
     elif dataset_name == "SQuAD":
-        ngram_weight = 0.2
+        ngram_weight = 0.1
     elif dataset_name == "CNN/DailyMail":
         ngram_weight = 0.1
     else:

@@ -39,7 +39,7 @@ def load_sts_dataset():
     print("Loading STS dataset...")
     dataset = load_dataset("stsb_multi_mt", name="en", split="test[:100]")
     print("STS dataset loaded.")
-    return dataset['sentence1'], dataset['sentence2']
+    return dataset['sentence1'], dataset['sentence2'], dataset['similarity_score']
 
 # # 여러 개의 질문-지문 쌍을 일괄 처리
 # data = [

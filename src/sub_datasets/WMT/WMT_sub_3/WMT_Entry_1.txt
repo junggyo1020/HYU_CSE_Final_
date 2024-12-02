@@ -1,2 +1,2 @@
-If the road is free, it comes immediately green for pedestrians, if not, it takes about 15 seconds.
 If the street is clear, the pedestrian obtains a green light immediately, if not, there is a delay of around 15 seconds.
+If the road is free, it comes immediately green for pedestrians, if not, it takes about 15 seconds.
