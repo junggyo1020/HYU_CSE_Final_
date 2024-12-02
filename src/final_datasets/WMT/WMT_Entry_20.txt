@@ -1,0 +1,2 @@
+If the pedestrian presses the button at the traffic lights, the top radar sensor checks the traffic status.
+If the pedestrian presses the traffic light button, the upper radar sensor tests the traffic situation.

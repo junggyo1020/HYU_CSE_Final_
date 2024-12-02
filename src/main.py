@@ -6,7 +6,8 @@ import os
 import logging
 from datetime import datetime
 from dataset_loader import load_wmt_dataset, load_squad_dataset, load_cnn_daily_dataset, load_sts_dataset
-from dataset_to_txt import save_dataset_to_folder, save_highlights_to_folder, save_full_squads_to_folder
+from dataset_to_txt import save_dataset_to_folder, save_highlights_to_folder, save_full_squads_to_folder, \
+    save_final_dataset_to_folder
 from evaluate_metrics import calculate_bleu, calculate_rouge, calculate_bert_score, calculate_combined_metric
 from wmt_trans import translate_wmt_german_to_english
 
@@ -21,57 +22,64 @@ wmt_dataset = load_wmt_dataset()
 wmt_english_data = [item['de'] for item in wmt_dataset]
 wmt_references = [item['en'] for item in wmt_dataset]
 wmt_hypotheses = translate_wmt_german_to_english(wmt_english_data)
-wmt_saved_path = save_dataset_to_folder((wmt_references, wmt_hypotheses), "WMT")
 
 # SQuAD 데이터셋 불러오기
 squad_references, squad_hypotheses, squad_contexts, squad_questions = load_squad_dataset()
 squad_references = [answer['text'][0] for answer in squad_references]
-squad_saved_path = save_dataset_to_folder((squad_references, squad_hypotheses), "SQuAD")
 
 # 인간평가를 위한 별도의 SQuAD 데이터셋 불러오기
-squad_full_saved_path = save_full_squads_to_folder((squad_contexts, squad_questions, squad_references, squad_hypotheses), "SQuAD_Full")
+# squad_full_saved_path = save_full_squads_to_folder((squad_contexts, squad_questions, squad_references, squad_hypotheses), "SQuAD_Full")
 
 # CNN/DailyMail 데이터셋 불러오기
 cnn_articles, cnn_highlights = load_cnn_daily_dataset()
 cnn_references = cnn_articles
 cnn_hypotheses = [" ".join(highlight.split("\n")) for highlight in cnn_highlights]  # 여러 문장을 하나로 묶음
-cnn_saved_path = save_dataset_to_folder((cnn_references, cnn_hypotheses), "CNN_DailyMail")
 
 # CNN highlights만 저장
-cnn_highlights_saved_path = save_highlights_to_folder(cnn_highlights, "CNN_Highlights")
+# cnn_highlights_saved_path = save_highlights_to_folder(cnn_highlights, "CNN_Highlights")
 
 # STS 데이터셋 불러오기
 sts_sentence1, sts_sentence2, sts_scores = load_sts_dataset()
 sts_references = sts_sentence1
 sts_hypotheses = sts_sentence2
 sts_scores = sts_scores
-sts_saved_path = save_dataset_to_folder((sts_references, sts_hypotheses), "STS")
 
-# 서브 데이터셋 경로와 이름
+# Final Dataset 저장 경로
+final_output_dir = "final_datasets"
+os.makedirs(final_output_dir, exist_ok=True)
+
+# Final Dataset 저장
+wmt_final_path = save_final_dataset_to_folder((wmt_references, wmt_hypotheses), "WMT", output_dir=final_output_dir)
+squad_final_path = save_final_dataset_to_folder((squad_references, squad_hypotheses), "SQuAD", output_dir=final_output_dir)
+cnn_final_path = save_final_dataset_to_folder((cnn_references, cnn_hypotheses), "CNN_DailyMail", output_dir=final_output_dir)
+sts_final_path = save_final_dataset_to_folder((sts_references, sts_hypotheses), "STS", output_dir=final_output_dir)
+cnn_highlights_final_path = save_final_dataset_to_folder(cnn_highlights, "CNN_Highlights", output_dir=final_output_dir)
+
+logging.info(f"WMT Final Dataset 저장 경로: {wmt_final_path}")
+logging.info(f"SQuAD Final Dataset 저장 경로: {squad_final_path}")
+logging.info(f"CNN/DailyMail Final Dataset 저장 경로: {cnn_final_path}")
+logging.info(f"STS Final Dataset 저장 경로: {sts_final_path}")
+logging.info(f"CNN_Highlights Final Dataset 저장 경로: {cnn_highlights_final_path}")
+
+
+# 데이터셋 경로와 이름
 dataset_names = {
-    "WMT": wmt_saved_path,
-    "SQuAD": squad_saved_path,
-    # "SQuAD_Full": squad_full_saved_path,
-    "CNN_DailyMail": cnn_saved_path,
-    # "CNN_Highlights": cnn_highlights_saved_path,
-    "STS": sts_saved_path
+    "WMT": wmt_final_path,
+    "SQuAD": squad_final_path,
+    # "SQuAD_Full": squad_full_final_path, # human evaluation 용
+    "CNN_DailyMail": cnn_final_path,
+    "CNN_Highlights": cnn_highlights_final_path,
+    "STS": sts_final_path
 }
 
 # Combined Score 저장할 디렉토리
 output_dir = 'combined_scores'
 os.makedirs(output_dir, exist_ok=True)
 
-logging.info(f"WMT 데이터셋 저장 경로: {wmt_saved_path}")
-logging.info(f"SQuAD 데이터셋 저장 경로: {squad_saved_path}")
-# logging.info(f"SQuAD Full 데이터셋 저장 경로: {squad_full_saved_path}")
-logging.info(f"CNN 데이터셋 저장 경로: {cnn_saved_path}")
-# logging.info(f"CNN Highlights 데이터셋 저장 경로: {cnn_highlights_saved_path}")
-logging.info(f"STS 데이터셋 저장 경로: {sts_saved_path}")
-
 
 # CSV 저장 함수 정의
-def save_scores_to_csv(dataset_name, sub_dataset_idx, bleu_score, rouge_score, bert_score, combined_score):
-    output_file = os.path.join(output_dir, f"{dataset_name}_sub_{sub_dataset_idx + 1}_scores.csv")
+def save_scores_to_csv(dataset_name, bleu_score, rouge_score, bert_score, combined_score):
+    output_file = os.path.join(output_dir, f"{dataset_name}_scores.csv")
     with open(output_file, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Metric', 'Score'])
@@ -81,29 +89,27 @@ def save_scores_to_csv(dataset_name, sub_dataset_idx, bleu_score, rouge_score, b
         writer.writerow(['CombinedScore', combined_score])
 
 
-# 각 데이터셋의 서브 데이터셋에 대해 평가 점수 계산 및 저장
+# 각 데이터셋의 평가 점수 계산 및 저장(Final)
 for dataset_name, saved_path in dataset_names.items():
-    for sub_dataset_idx in range(10):
-        sub_dataset_folder = os.path.join(saved_path, f"{dataset_name}_sub_{sub_dataset_idx + 1}")
-
-        # 서브 데이터셋의 텍스트 파일 로드
-        references, hypotheses = [], []
-        for idx in range(1, 11):  # 각 서브 데이터셋에 10개의 파일이 존재
-            entry_file = os.path.join(sub_dataset_folder, f"{dataset_name}_Entry_{idx}.txt")
-            with open(entry_file, 'r') as f:
+    references, hypotheses = [], []
+    for entry_file in sorted(os.listdir(saved_path)):  # 정렬된 Entry 파일 목록 가져오기
+        if entry_file.endswith(".txt"):  # .txt 파일만 처리
+            entry_path = os.path.join(saved_path, entry_file)
+            with open(entry_path, 'r') as f:
                 lines = f.readlines()
-                references.append(lines[0].strip())  # 첫 번째 요소를 references로 사용
-                hypotheses.append(lines[1].strip())  # 두 번째 요소를 hypotheses로 사용
+                references.append(lines[0].strip())  # 첫 번째 줄을 references로 사용
+                hypotheses.append(lines[1].strip())  # 두 번째 줄을 hypotheses로 사용
 
-        # 각 점수 계산
-        bleu_score = calculate_bleu(references, hypotheses)
-        rouge_score = calculate_rouge(references, hypotheses)
-        bert_score = calculate_bert_score(references, hypotheses)
-        combined_score = calculate_combined_metric(dataset_name, references, hypotheses)
+    # 각 점수 계산
+    bleu_score = calculate_bleu(references, hypotheses)
+    rouge_score = calculate_rouge(references, hypotheses)
+    bert_score = calculate_bert_score(references, hypotheses)
+    combined_score = calculate_combined_metric(dataset_name, references, hypotheses)
 
-        # 점수 저장
-        save_scores_to_csv(dataset_name, sub_dataset_idx, bleu_score, rouge_score, bert_score, combined_score)
-        logging.info(f"{dataset_name} 서브 데이터셋 {sub_dataset_idx + 1}의 점수 저장 완료.")
+    # 점수 저장
+    save_scores_to_csv(dataset_name, bleu_score, rouge_score, bert_score, combined_score)
+    logging.info(f"{dataset_name} 전체 데이터 점수 계산 완료 및 저장.")
+
 
 # Human Evaluation - STS 점수 정규화 및 평균 계산
 def normalize_and_average_scores(scores, min_score=0, max_score=5):
