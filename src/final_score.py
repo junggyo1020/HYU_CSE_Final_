@@ -31,7 +31,7 @@ def calculate_final_score(combined_file, taaco_file):
     taaco_df = pd.read_csv(taaco_file)
     # taassc_df = pd.read_csv(taassc_file)
 
-    combined_score = combined_df['Score'].iloc[0]
+    combined_score = combined_df['Score'].iloc[3]
     taaco_score = taaco_df['TAACO_Score'].iloc[0]
     # taassc_score = taassc_df['TAASSC_Score'].iloc[0]
 
