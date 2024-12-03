@@ -109,3 +109,33 @@ def save_full_squads_to_folder(dataset, name_suffix, output_dir="sub_datasets"):
 
     print(f"{name_suffix} 데이터셋이 {len(sub_datasets)}개의 서브 데이터셋으로 저장되었습니다.")
     return dataset_dir
+
+
+def save_final_dataset_to_folder(dataset, name_suffix, output_dir="final_datasets"):
+    """
+    Args:
+        dataset: 데이터셋의 리스트 형태. 예: (references, hypotheses)
+        name_suffix: 데이터셋의 이름 (예: 'WMT', 'SQuAD', 'CNN_DailyMail', 'STS').
+        output_dir: 파일이 저장될 디렉토리 경로 (기본값: "final_datasets").
+    """
+    # 각 데이터셋별 폴더 생성
+    dataset_dir = os.path.join(output_dir, name_suffix)
+    os.makedirs(dataset_dir, exist_ok=True)
+
+    # 각 데이터셋의 항목을 개별 텍스트 파일로 저장
+    if isinstance(dataset, tuple) and len(dataset) == 2:  # references와 hypotheses로 구성된 튜플
+        for idx, (reference, hypothesis) in enumerate(zip(*dataset), start=1):
+            entry_filename = f"{name_suffix}_Entry_{idx}.txt"
+            entry_path = os.path.join(dataset_dir, entry_filename)
+            with open(entry_path, "w") as f:
+                f.write(f"{reference}\n")  # 첫 번째 줄에 reference 저장
+                f.write(f"{hypothesis}\n")  # 두 번째 줄에 hypothesis 저장
+    elif isinstance(dataset, list):  # 단일 리스트인 경우 (예: CNN_Highlights)
+        for idx, item in enumerate(dataset, start=1):
+            entry_filename = f"{name_suffix}_Entry_{idx}.txt"
+            entry_path = os.path.join(dataset_dir, entry_filename)
+            with open(entry_path, "w") as f:
+                f.write(f"{item}\n")  # 리스트의 요소를 한 줄에 저장
+
+    print(f"{name_suffix} 데이터셋이 {dataset_dir}에 저장되었습니다.")
+    return dataset_dir
