@@ -73,7 +73,7 @@ dataset_names = {
 }
 
 # Combined Score 저장할 디렉토리
-output_dir = 'combined_scores'
+output_dir = 'csv_files/combined_scores'
 os.makedirs(output_dir, exist_ok=True)
 
 
