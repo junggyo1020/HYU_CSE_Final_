@@ -1,2 +1,0 @@
-The ballerina is dancing.
-A man is dancing.
