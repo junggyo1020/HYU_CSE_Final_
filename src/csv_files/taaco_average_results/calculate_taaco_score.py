@@ -5,7 +5,7 @@ import csv
 wmt_weights = [0, 0, 0, 0, 0, 0, 0.6, 0.4, 0, 0]
 squad_weights = [0, 0, 0, 0, 0, 0, 0.7, 0.3, 0, 0]
 cnn_weights = [0, 0, 0, 0, 0, 0, 0.6, 0.4, 0, 0]
-cnn_summary_weights = [0, 0, 0.6, 0.4, 0, 0, 0, 0, 0, 0]
+cnnHighlights_weights = [0, 0, 0.6, 0.4, 0, 0, 0, 0, 0, 0]
 sts_weights = [0, 0, 0, 0, 0, 0, 0.7, 0.3, 0, 0]
 
 # 각 데이터셋 이름에 해당하는 가중치 매핑
@@ -13,7 +13,7 @@ weights_mapping = {
     'wmt': wmt_weights,
     'squad': squad_weights,
     'cnn': cnn_weights,
-    'cnn_summary': cnn_summary_weights,
+    'cnnHighlights': cnnHighlights_weights,
     'sts': sts_weights
 }
 

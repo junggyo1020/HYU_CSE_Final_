@@ -4,7 +4,7 @@ import csv
 
 # 두 CSV 파일의 파일 경로
 taaco_file = 'cnn_taaco_score.csv'
-summary_file = 'cnn_summary_score.csv'
+summary_file = 'cnnHighlights_taaco_score.csv'
 
 
 # CSV 파일을 읽은 후 2행 2열의 점수를 가져오는 함수
