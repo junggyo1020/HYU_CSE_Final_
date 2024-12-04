@@ -40,6 +40,6 @@ def calculate_taassc_score(input_directory, output_directory):
                 print(f"{filename}의 TAASSC_Score: {weighted_score}")
 
 # 실행 예시
-input_directory = "csv_files/taassc_average_results"  # 평균값 csv 파일들이 있는 폴더 경로
-output_directory = "csv_files/taassc_scores"  # 결과를 저장할 폴더 경로
+input_directory = "./"  # 평균값 csv 파일들이 있는 폴더 경로
+output_directory = "../taassc_scores"  # 결과를 저장할 폴더 경로
 calculate_taassc_score(input_directory, output_directory)
