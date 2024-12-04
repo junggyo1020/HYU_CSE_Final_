@@ -45,8 +45,8 @@ def process_all_files(input_directory, output_directory):
 
 
 # 실행
-input_directory = "csv_files/taassc_result"
-output_directory = "csv_files/taassc_average_results"
+input_directory = "./"
+output_directory = "../taassc_average_results"
 os.makedirs(output_directory, exist_ok=True)
 
 process_all_files(input_directory, output_directory)

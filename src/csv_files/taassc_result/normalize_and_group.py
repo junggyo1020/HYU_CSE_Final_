@@ -69,4 +69,4 @@ def normalize_and_group(input_directory):
             print(f"처리 완료: {file_path}")
 
 # 예시 사용법
-normalize_and_group("csv_files/taassc_result")
+normalize_and_group("./")

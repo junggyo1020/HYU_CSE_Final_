@@ -39,6 +39,6 @@ def calculate_average_and_save(input_directory, output_directory):
 
 
 # 실행 예시
-input_directory = "csv_files/taaco_result"  # csv 파일들이 있는 폴더 경로
-output_directory = "csv_files/taaco_average_results"  # 결과를 저장할 폴더 경로
+input_directory = "./"  # csv 파일들이 있는 폴더 경로
+output_directory = "../taaco_average_results"  # 결과를 저장할 폴더 경로
 calculate_average_and_save(input_directory, output_directory)
