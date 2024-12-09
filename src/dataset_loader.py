@@ -4,7 +4,7 @@ from datasets import load_dataset
 from transformers import pipeline
 
 # QA 모델 로드
-qa_model = pipeline("question-answering")
+qa_model = pipeline("question-answering", device=0)
 
 def load_wmt_dataset():
     print("Loading WMT dataset...")
