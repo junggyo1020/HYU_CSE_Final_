@@ -881,15 +881,23 @@ def main(indir, outdir, varDict, gui = False, source_text = False):
 			if counter < 2:
 				syn_counter_norm = 0
 			else:
-				syn_counter = 0
+				ratio_sum = 0  # 중복 단어 비율 합계 계산을 위한 변수
+
 				for i in range(counter - 1):
-					for items in set(list[i]):
-						for item in syn_dict[i + 1]:
-							if items in item:
-								syn_counter += 1
-				# 기존 계산 후 정규화 적용
-				syn_counter_norm = safe_divide(syn_counter, counter - 1)
-				syn_counter_norm = np.tanh(syn_counter_norm)  # 정규화 함수 적용
+					# 명사와 동사의 기본형으로 이뤄진 세트 생성
+					doc = nlp(' '.join(list[i]))
+					unique_words = set(token.lemma_ for token in doc)
+					total_words = len(unique_words)
+					syn_counter = 0
+
+					for word in unique_words:
+						if word in syn_dict[i + 1]:
+							syn_counter += 1
+
+					syn_ratio = safe_divide(syn_counter, total_words)
+					ratio_sum += syn_ratio
+
+				syn_counter_norm = safe_divide(ratio_sum, counter - 1)
 
 			header_list.append("syn_overlap_" + name_suffix)
 			index_list.append(syn_counter_norm)
