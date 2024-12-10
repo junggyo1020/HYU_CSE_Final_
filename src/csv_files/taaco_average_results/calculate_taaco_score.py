@@ -3,7 +3,7 @@ import csv
 
 # 데이터셋별 고정 가중치 벡터
 wmt_weights = [0, 0, 0, 0, 0, 0, 0.6, 0.4, 0, 0]
-squad_weights = [0, 0, 0, 0, 0, 0, 0.7, 0.3, 0, 0]
+squad_weights = [0, 0, 0, 0, 0, 0, 1.0, 0.0, 0, 0]
 cnn_weights = [0, 0, 0, 0, 0, 0, 0.6, 0.4, 0, 0]
 cnnHighlights_weights = [0, 0, 0.6, 0.4, 0, 0, 0, 0, 0, 0]
 sts_weights = [0, 0, 0, 0, 0, 0, 0.7, 0.3, 0, 0]
