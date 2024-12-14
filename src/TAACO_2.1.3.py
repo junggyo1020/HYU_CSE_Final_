@@ -883,15 +883,16 @@ def main(indir, outdir, varDict, gui = False, source_text = False):
 			else:
 				ratio_sum = 0  # 중복 단어 비율 합계 계산을 위한 변수
 
-				for i in range(counter - 1):
-					# 명사와 동사의 기본형으로 이뤄진 세트 생성
+				for i in range(1, counter):  # 이전 문장을 비교해야 하므로 인덱스를 1부터 시작
+					# 현재 문장의 모든 단어의 기본형으로 이루어진 세트 생성
 					doc = nlp(' '.join(list[i]))
 					unique_words = set(token.lemma_ for token in doc)
 					total_words = len(unique_words)
 					syn_counter = 0
 
+					# 이전 문장의 동의어 사전과 현재 문장의 단어를 비교
 					for word in unique_words:
-						if word in syn_dict[i + 1]:
+						if word in syn_dict[i]:  # 이전 문장의 동의어 사전을 참조
 							syn_counter += 1
 
 					syn_ratio = safe_divide(syn_counter, total_words)
