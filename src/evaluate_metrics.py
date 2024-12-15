@@ -31,7 +31,7 @@ def calculate_bert_score(references, hypotheses):
 def calculate_weighted_ngram_match(reference, candidate, n, pos_weights):
     """
     품사별 가중치를 고려한 N-그램 일치율 계산
-    일치하는 n-그램에 대해서만 해당 품사의 가중치를 적용하여 계산합니다.
+    일치하는 n-그램에 대해서만 해당 품사의 가중치를 적용하여 계산
     """
     ref_doc = nlp(reference)
     cand_doc = nlp(candidate)
