@@ -36,9 +36,14 @@ def calculate_weighted_ngram_match(reference, candidate, n, pos_weights):
     ref_doc = nlp(reference)
     cand_doc = nlp(candidate)
 
-    # 참조 문장과 후보 문장의 N-그램 추출
-    ref_ngrams = list(ngrams([token.text for token in ref_doc], n))
-    cand_ngrams = list(ngrams([token.text for token in cand_doc], n))
+    # 단어별 토큰화 및 품사 추출
+    ref_tokens = [(token.text, token.pos_) for token in ref_doc]
+    cand_tokens = [(token.text, token.pos_) for token in cand_doc]
+
+    # 참조 문장과 후보 문장의 N-그램 생성
+    ref_ngrams = list(ngrams(ref_tokens, n))
+    cand_ngrams = list(ngrams(cand_tokens, n))
+
 
     ref_counter = Counter(ref_ngrams)
     cand_counter = Counter(cand_ngrams)
@@ -48,13 +53,10 @@ def calculate_weighted_ngram_match(reference, candidate, n, pos_weights):
 
     # 참조 문장의 n-그램과 후보 문장의 n-그램 일치 계산
     for ngram in ref_counter:
-        ngram_pos_tags = [token.pos_ for token in nlp(' '.join(ngram))]
-
-        # 각 품사에 대해 가중치 설정
         weight = 1.0  # 기본 가중치는 1.0
-        for pos in ngram_pos_tags:
+        for _, pos in ngram:  # n-gram 내 각 단어의 품사를 확인
             if pos in pos_weights:
-                weight *= pos_weights[pos]  # 품사에 해당하는 가중치를 곱함
+                weight *= pos_weights[pos]  # 품사에 해당하는 가중치 곱하기
 
         total_weight += ref_counter[ngram] * weight  # 전체 가중치 계산 (빈도 × 품사 가중치)
 
