@@ -10,7 +10,7 @@ datasets = ['cnn', 'squad', 'wmt', 'sts']
 
 # 데이터셋별 고정 가중치 벡터 [combined, taaco]
 weights = {
-    'wmt': [0.85, 0.15],
+    'wmt': [0.7, 0.3],
     'squad': [0.8, 0.2],
     'cnn': [0.5, 0.5],
     'cnnHighlights': [0.5, 0.5],  # 계산에서 사용
