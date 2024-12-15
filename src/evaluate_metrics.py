@@ -11,7 +11,7 @@ import spacy
 # spaCy 모델 불러오기 (영어)
 nlp = spacy.load("en_core_web_sm")
 
-# 품사별 가중치 실험 이후 최적의 가중치 설정 (명사: 1.4, 동사: 1.2, 형용사: 1.5)
+# 품사별 가중치 실험 이후 최적의 가중치 설정 (명사: 1.2, 동사: 1.1, 형용사: 1.0)
 POS_WEIGHTS = {'NOUN': 1.2, 'VERB': 1.1, 'ADJ': 1.0}
 
 def calculate_bleu(references, hypotheses):
